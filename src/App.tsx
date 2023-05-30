@@ -1,26 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, {useState} from 'react';
 import './App.css';
+import {TaskType, Todolist} from './Todolist';
+
+
+export type FilterValueType = "All" | "Active" | "Completed"
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+
+    let [tasks, setTasks] = useState<Array<TaskType>>([
+        {id: 1, title: "HTML&CSS", isDone: true},
+        {id: 2, title: "JS", isDone: true},
+        {id: 3, title: "ReactJS", isDone: false},
+        {id: 4, title: "CSS", isDone: true},
+        {id: 5, title: "JAVA", isDone: false},
+    ])
+    const removeTask = (taskID: number) => {
+        setTasks(tasks.filter(el => el.id !== taskID))
+    }
+
+    let [filter, setFilter] = useState<FilterValueType>("All")
+
+    let filterForTodolist = tasks
+
+    if (filter === "Active") {
+        filterForTodolist = tasks.filter((el) => el.isDone === false)
+    }
+    if (filter === "Completed") {
+        filterForTodolist = tasks.filter((el) => el.isDone === true)
+    }
+    const changeFilter = (value: FilterValueType) => {
+        setFilter(value)
+    }
+
+    return (
+        <div className="App">
+            <Todolist
+                title={"What to learn"}
+                tasks={filterForTodolist}
+                removeTask={removeTask}
+                changeFilter={changeFilter}
+            />
+        </div>
+    )
 }
 
 export default App;
+
